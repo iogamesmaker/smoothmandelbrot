@@ -4,9 +4,9 @@ I stole the smooth coloring algorithm from https://en.wikipedia.org/wiki/Plottin
 uses GL/glut.h
 `g++ mandel.cpp -o mandel -lGL -lGLU -lglut`
 # planned stuff
-multithreading
-biomorphs like Xaos uses
-general optimizations
+multithreading,
+biomorphs like Xaos uses,
+general optimizations,
 boundry tracing?
 better controls
 # me complaining
