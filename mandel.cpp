@@ -4,12 +4,14 @@
 float lerp(float a,float b,float t){return a+t*(b-a);}
 const int WIDTH =800;
 const int HEIGHT=600;
-double xPos=-2.0;
-double yPos=-1.0;
-double zoom=300;
+float r1,r2,g1,g2,b1,b2;
+bool biomorph=false;
+double xPos=-3.2;
+double yPos=-2.0;
+double zoom=150;
 double startX,startY,start_X,start_Y;
-int maxIter =100;
-int maxIter2=100;
+int maxIter =50;
+int maxIter2=50;
 double zoomFactor=1.0;
 float period=0;
 bool render=true;
@@ -18,7 +20,7 @@ float escapesmooth(double real, double imag){ // Optimized Escape Time Algorithm
 	double i0=imag;
 	float iter=0.0;
 	double tempreal,io,ro;
-	while(iter<	maxIter&&real*real+imag*imag<=4){
+	while(iter<maxIter&&real*real+imag*imag<=16){
 		tempreal=real*real-imag*imag+r0;
 		imag=2*real*imag+i0;
 		real=tempreal;
@@ -26,6 +28,13 @@ float escapesmooth(double real, double imag){ // Optimized Escape Time Algorithm
 		if(real==ro&&imag==io){
 			iter=maxIter;
 			break;
+		}
+		//interesting effect
+		if(biomorph){
+			if(abs(real)>0.75&&abs(imag)>0.75){
+				iter=real+imag;
+				break;
+			}
 		}
 		period++;
 		if(period>20){
@@ -37,25 +46,12 @@ float escapesmooth(double real, double imag){ // Optimized Escape Time Algorithm
 	if(iter<maxIter){
 		float log_zn=log((real*real)+(imag*imag))/2;
 		float nu=log(log_zn/log(2))/log(2);
-		iter=iter+1.0-nu;}
-	return iter;
-}/*
-int escape(double real, double imag){ // Escape time algorithm 
-	double r0=real;
-	double ig0=imag;
-	int iter=0;
-	double tempreal=0;
-	while(iter<	maxIter&&real*real+imag*imag<=4){
-		tempreal=real*real-imag*imag+r0;
-		imag=2*real*imag+ig0;
-		real=tempreal;
-		iter++;
+		iter=iter+1.0-nu;
 	}
 	return iter;
-}*/
+}
 
 void display(){
-	glClear(GL_COLOR_BUFFER_BIT);
 	if(render){
 		for(int x=0;x<WIDTH;x++){
 			glBegin(GL_POINTS);
@@ -67,43 +63,35 @@ void display(){
 				}
 				else{
 					float r1=0.5+sin(floor(iterations)/10)/2;
-					float r2=0.5+sin((floor(iterations)+1)/10)/2;
 					float g1=floor(iterations)/maxIter;
-					float g2=(floor(iterations)+1)/maxIter;
 					float b1=1-floor(iterations)/maxIter;
+
+					float r2=0.5+sin((floor(iterations)+1)/10)/2;
+					float g2=  (floor(iterations)+1)/maxIter;
 					float b2=1-(floor(iterations)+1)/maxIter;
-					/*Sunburst:
+					/*Sunburst:*//*
+					float r1=floor(iterations)/32;
+					float r2=floor(iterations+1)/32;
+					float g1=floor(iterations)/64;
+					float g2=floor(iterations+1)/64;
+					float b1=floor(iterations)/128;
+					float b2=floor(iterations+1)/128;
+					/*test*//*
 					float r1=floor(iterations)/32;
 					float r2=floor(iterations+1)/32;
 					float g1=floor(iterations)/64;
 					float g2=floor(iterations+1)/64;
 					float b1=floor(iterations)/128;
 					float b2=floor(iterations+1)/128;*/
-					/*test
-					float r1=iterations/32;
-					float r2=iterations/32;
-					float g1=iterations/64;
-					float g2=iterations/64;
-					float b1=iterations/128;
-					float b2=iterations/128;*/
-					
+
 					float t=fmod(iterations,1);
 					glColor3f(lerp(r1,r2,t),lerp(g1,g2,t),lerp(b1,b2,t));
-					//glColor3f(r1,g1,b1);
-					}
+				}
 			}
-			if(maxIter>100000){
 			glEnd();
 			glFlush();}
 		}
-		glEnd();
-		glFlush();
-	if(maxIter2>1999999){
-		render=false;
-		}
-	}
-	maxIter*=1.2;
-	if(render){glutSwapBuffers();}
+	//maxIter*=1.2;
 }
 void reshape(int w,int h){glutReshapeWindow(WIDTH,HEIGHT);}
 bool isDragging = false;
@@ -132,14 +120,28 @@ void motion(int x, int y) {
         glutPostRedisplay();
     }
 }
-void key(unsigned char key,int x,int y){
-	switch(key){
-		case 'q':{zoom*=1.1;maxIter=maxIter2;render=true;break;}
-		case 'e':{zoom*=0.9;maxIter=maxIter2;render=true;break;}
-		case '=':{maxIter2+=1;maxIter=maxIter2;render=true;break;}
-		case '+':{maxIter2+=1;maxIter=maxIter2;render=true;break;}
-		case '-':{maxIter2-=1;maxIter=maxIter2;render=true;break;}
-		case 'r':{zoom=300;xPos=-2.0;yPos=-1.0;maxIter=50;render=true;break;}
+void key(unsigned char key, int x, int y) {
+	switch (key){
+    case 'q': {
+        zoom *= 1.1;
+        maxIter = maxIter2;
+        render = true;
+		glutPostRedisplay();
+        break;
+    }
+
+    case 'e': {
+        zoom *= 0.9;
+        maxIter = maxIter2;
+        render = true;
+		glutPostRedisplay();
+        break;
+    }
+        case '=': {maxIter2 += 1;maxIter = maxIter2;render = true;glutPostRedisplay();break;}
+        case '+': {maxIter2 += 1;maxIter = maxIter2;render = true;glutPostRedisplay();break;}
+        case '-': {maxIter2 -= 1;maxIter = maxIter2;render = true;glutPostRedisplay();break;}
+		case 'b': {if(biomorph){biomorph=false;}else{biomorph=true;}glutPostRedisplay();break;}
+        case 'r': {double xPos=-3.2;double yPos=-2.0;double zoom=150;maxIter = 50;render = true;glutPostRedisplay();break;}
 	}
 }
 
@@ -148,18 +150,18 @@ int main(int argc, char** argv){
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowSize(WIDTH,HEIGHT);
 	glutCreateWindow("mandel badandel");
-	
+
 	glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0, WIDTH, 0, HEIGHT);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    	glLoadIdentity();
+	gluOrtho2D(0, WIDTH, 0, HEIGHT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	glClearColor(0.0,0.0,0.0,1.0);
-	
+
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-    glutMouseFunc(mouse);
-    glutMotionFunc(motion);
+	glutMouseFunc(mouse);
+	glutMotionFunc(motion);
 	glutKeyboardFunc(key);
 
 	glutMainLoop();
