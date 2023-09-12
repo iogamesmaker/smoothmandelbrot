@@ -9,6 +9,7 @@ bool biomorph=false;
 bool julia=false;
 bool smooth=false;
 bool render=true;
+bool cbdetect=true;
 long double xPos=-3.2;
 long double yPos=-2.0;
 long double zoom=150;
@@ -22,6 +23,12 @@ float period=0,iterations=0,iter=0,log_zn,nu,r1,r2,g1,g2,b1,b2,deltaX,deltaY,t;
 void reset(){
 	xPos=-3.2;yPos=-2.0;zoom=150;render=true;glutPostRedisplay();
 }
+bool inCardioidOrBulb(double x, double y) {
+    double y2 = y * y;
+    double q = (x - 0.25) * (x - 0.25) + y2;
+    return (q * (q + (x - 0.25)) < y2 / 4.0 || (x + 1.0) * (x + 1.0) + y2 < 0.0625);
+}
+
 void key(unsigned char key, int x, int y) {
 	switch (key){
 		case 'q': {
@@ -39,13 +46,14 @@ void key(unsigned char key, int x, int y) {
 			glutPostRedisplay();
 			break;
 		}
-        case '+': {maxIter2 *= 1.1;maxIter = maxIter2;render = true;glutPostRedisplay();break;}
-        case '=': {maxIter2 *= 1.1;maxIter = maxIter2;render = true;glutPostRedisplay();break;}
-        case '-': {maxIter2 /= 1.1;maxIter = maxIter2;render = true;glutPostRedisplay();break;}
+        case '+': {maxIter *= 1.1;maxIter2 = maxIter;std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
+        case '=': {maxIter *= 1.1;maxIter2 = maxIter;std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
+        case '-': {maxIter /= 1.1;maxIter2 = maxIter;if(maxIter<10){maxIter=10;}std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
 		case 'b': {biomorph=!biomorph;glutPostRedisplay();break;}
-		case 's': {smooth  =!  smooth;glutPostRedisplay();break;}
-		case '2': {fractal=2;std::cout << "-Burning Ship-"; break;}
-		case '1': {fractal=1;std::cout << "Mandelbrot Set";break;}
+		case 's': {smooth  =!smooth;  glutPostRedisplay();break;}
+		case 'c': {cbdetect=!cbdetect;glutPostRedisplay();break;}
+		case '2': {fractal=2;std::cout << "-Burning Ship-\n"; break;}
+		case '1': {fractal=1;std::cout << "Mandelbrot Set\n"; break;}
         case 'r': {reset();break;}
         case 'j': {
 			if(julia){
@@ -72,6 +80,7 @@ float escapesmooth(long double real, long double imag, int x, int y){
 			r0=xJul;i0=yJul;
 		}
 	iter=0.0;
+	if(fractal==1&&cbdetect){if(inCardioidOrBulb(real,imag)){return maxIter;}}
 	while(iter<maxIter&&real*real+imag*imag<=16){
 		tempreal=real*real-imag*imag+r0;
 		if(fractal==2){
@@ -194,7 +203,7 @@ int main(int argc, char** argv){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 	glClearColor(0.0,0.0,0.0,1.0);
-
+	std::cout << "Maximum iterations: " << maxIter << "\n";
 	glutPassiveMotionFunc(onMouseMove);
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
