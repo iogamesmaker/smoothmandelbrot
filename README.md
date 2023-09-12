@@ -6,6 +6,17 @@ uses GL/glut.h=
 
 multithreading for some reason only slows stuff down (using omp.h), so not doing that.
 
+# Controls:
+Drag to move.
+Q/E to zoom in/out.
+-/= to change maxIter.
+1 for Mandelbrot set.
+2 for Burning Ship.
+r resets.
+J for julia set at the point where your cursor is.
+B to toggle biomorphs
+S to toggle smooth coloring
+
 # planned stuff
 general optimizations, like
 boundry tracing? (any help really appreciated)
