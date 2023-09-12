@@ -9,7 +9,6 @@ bool biomorph=false;
 bool julia=false;
 bool smooth=false;
 bool render=true;
-bool cbdetect=true;
 long double xPos=-3.2;
 long double yPos=-2.0;
 long double zoom=150;
@@ -51,7 +50,6 @@ void key(unsigned char key, int x, int y) {
         case '-': {maxIter /= 1.1;maxIter2 = maxIter;if(maxIter<10){maxIter=10;}std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
 		case 'b': {biomorph=!biomorph;glutPostRedisplay();break;}
 		case 's': {smooth  =!smooth;  glutPostRedisplay();break;}
-		case 'c': {cbdetect=!cbdetect;glutPostRedisplay();break;}
 		case '2': {fractal=2;std::cout << "-Burning Ship-\n"; break;}
 		case '1': {fractal=1;std::cout << "Mandelbrot Set\n"; break;}
         case 'r': {reset();break;}
@@ -80,7 +78,7 @@ float escapesmooth(long double real, long double imag, int x, int y){
 			r0=xJul;i0=yJul;
 		}
 	iter=0.0;
-	if(fractal==1&&cbdetect){if(inCardioidOrBulb(real,imag)){return maxIter;}}
+	if(fractal==1&&!julia){if(inCardioidOrBulb(real,imag)){return maxIter;}}
 	while(iter<maxIter&&real*real+imag*imag<=16){
 		tempreal=real*real-imag*imag+r0;
 		if(fractal==2){
