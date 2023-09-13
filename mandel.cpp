@@ -15,20 +15,24 @@ long double zoom=150;
 long double xJul,yJul;
 int fractal=1;
 long double startX,startY,start_X,start_Y;
-int maxIter =1000;
-int maxIter2=1000;
+int maxIter =250;
+int maxIter2=250;
 long double zoomFactor=1.0;
 float period=0,iterations=0,iter=0,log_zn,nu,r1,r2,g1,g2,b1,b2,deltaX,deltaY,t;
 void reset(){
 	xPos=-3.2;yPos=-2.0;zoom=150;render=true;glutPostRedisplay();
 }
-bool inCardioidOrBulb(double x, double y) {
-    double y2 = y * y;
-    double q = (x - 0.25) * (x - 0.25) + y2;
+bool inCardioidOrBulb(long double x, long double y) {
+    long double y2 = y * y;
+    long double q = (x - 0.25) * (x - 0.25) + y2;
     return (q * (q + (x - 0.25)) < y2 / 4.0 || (x + 1.0) * (x + 1.0) + y2 < 0.0625);
 }
 
 void key(unsigned char key, int x, int y) {
+	if (key == 27) {
+		std::cout << "Thank you for using https://github.com/iogameplayer/smoothmandelbrot.\n";
+		exit(0);
+	}
 	switch (key){
 		case 'q': {
 			zoom *= 1.1;
@@ -45,11 +49,14 @@ void key(unsigned char key, int x, int y) {
 			glutPostRedisplay();
 			break;
 		}
-        case '+': {maxIter *= 1.1;maxIter2 = maxIter;std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
-        case '=': {maxIter *= 1.1;maxIter2 = maxIter;std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
-        case '-': {maxIter /= 1.1;maxIter2 = maxIter;if(maxIter<10){maxIter=10;}std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
+        case '+': {maxIter *= 1.1;if(maxIter>1000000){maxIter=1000000;}maxIter2 = maxIter;std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
+        case '=': {maxIter *= 1.1;if(maxIter>1000000){maxIter=1000000;}maxIter2 = maxIter;std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();break;}
+        case '-': {maxIter /= 1.1;maxIter2 = maxIter;if(maxIter<10){maxIter=10;}std::cout << "Maximum iterations: " << maxIter << "\n";render = true;glutPostRedisplay();if(maxIter>1000000){maxIter=1000000;}break;}
 		case 'b': {biomorph=!biomorph;glutPostRedisplay();break;}
 		case 's': {smooth  =!smooth;  glutPostRedisplay();break;}
+		case '4': {fractal=4;std::cout << "-New Fractal?-\n"; break;}
+		//case '5': {fractal=5;std::cout << "----Newton----\n"; break;}
+		case '3': {fractal=3;std::cout << "---Tri-corn---\n"; break;}
 		case '2': {fractal=2;std::cout << "-Burning Ship-\n"; break;}
 		case '1': {fractal=1;std::cout << "Mandelbrot Set\n"; break;}
         case 'r': {reset();break;}
@@ -80,12 +87,21 @@ float escapesmooth(long double real, long double imag, int x, int y){
 	iter=0.0;
 	if(fractal==1&&!julia){if(inCardioidOrBulb(real,imag)){return maxIter;}}
 	while(iter<maxIter&&real*real+imag*imag<=16){
-		tempreal=real*real-imag*imag+r0;
-		if(fractal==2){
-		imag=-2*abs(real*imag)+i0;}
-		else if(fractal==1){
-		imag=2*real*imag+i0;}
-		real=tempreal;
+		if(fractal==4){
+			tempreal=real*imag+r0;
+			imag=2*real-imag+i0;
+			real=tempreal;
+		}
+		else{
+			tempreal=real*real-imag*imag+r0;
+			if(fractal==2){
+				imag=-2*abs(real*imag)+i0;}
+			else if(fractal==1){
+				imag=2*real*imag+i0;}
+			else if(fractal==3){
+				imag=-2*real*imag+i0;}
+			real=tempreal;
+		}
 		iter++;
 		if(real==ro&&imag==io){
 			iter=maxIter;
@@ -94,7 +110,7 @@ float escapesmooth(long double real, long double imag, int x, int y){
 		//interesting effect
 		if(biomorph){
 			if(abs(real)>4&&abs(imag)>4){
-				iter=real+imag;
+				iter=maxIter-abs(real*imag)+0.1;
 				break;
 			}
 		}
@@ -189,6 +205,18 @@ void onMouseMove(int x, int y) {
     mouseX = x;
     mouseY = y;
 }
+void specialfunc(int key, int x, int y){
+	switch(key){
+		case GLUT_KEY_UP:{
+			yPos+=40/zoom;break;}
+		case GLUT_KEY_DOWN:{
+			yPos-=40/zoom;break;}
+		case GLUT_KEY_RIGHT:{
+			xPos+=40/zoom;break;}
+		case GLUT_KEY_LEFT:{
+			xPos-=40/zoom;break;}
+	}
+}
 int main(int argc, char** argv){
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -202,6 +230,8 @@ int main(int argc, char** argv){
     glLoadIdentity();
 	glClearColor(0.0,0.0,0.0,1.0);
 	std::cout << "Maximum iterations: " << maxIter << "\n";
+
+	glutSpecialFunc(specialfunc);
 	glutPassiveMotionFunc(onMouseMove);
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
