@@ -15,6 +15,7 @@ bool render=true;
 long double xPos=-3.2;
 long double yPos=-2.0;
 long double zoom=150;
+int frame=0;int oFrame=1486618625;
 long double xJul,yJul;
 int fractal=1;
 long double startX,startY,start_X,start_Y;
@@ -27,18 +28,22 @@ float period=0,iterations=0,iter=0,log_zn,nu,r1,r2,g1,g2,b1,b2,deltaX,deltaY,t;
 void reset(){
 	xPos=-3.2;yPos=-2.0;zoom=150;render=true;glutPostRedisplay();
 }
-bool inCardioidOrBulb(long double x, long double y) {
-    long double y2 = y * y;
-    long double q = (x - 0.25) * (x - 0.25) + y2;
-    return (q * (q + (x - 0.25)) < y2 / 4.0 || (x + 1.0) * (x + 1.0) + y2 < 0.0625);
-}
+//bool inCardioidOrBulb(long double x, long double y) {
+//    long double y2 = y * y;
+//    long double q = (x - 0.25) * (x - 0.25) + y2;
+//    return (q * (q + (x - 0.25)) < y2 / 4.0 || (x + 1.0) * (x + 1.0) + y2 < 0.0625);
+//}
 
 void key(unsigned char key, int x, int y) {
 	if (key == 27) {
 		exit(0);
 	}
 	if (key == 32){
-		std::cout << "---Position---\n"<< "x: " << xPos <<"\ny: " << yPos << "\nZoom:" << zoom << "\n--------------\n";glutPostRedisplay();
+		if(julia){
+			std::cout << "---Position---\n"<< "x: " << xPos <<"\ny: " << yPos << "\nZoom: " << zoom << "\nJulia x: " << xJul << "\nJulia y: " << yJul << "\n--------------\n";glutPostRedisplay();
+
+		}else{
+		std::cout << "---Position---\n"<< "x: " << xPos <<"\ny: " << yPos << "\nZoom:" << zoom << "\n--------------\n";glutPostRedisplay();}
 	}
 
 	switch (key){
@@ -62,8 +67,8 @@ void key(unsigned char key, int x, int y) {
 		case '1': {fractal=1;std::cout << "Mandelbrot Set\n";glutPostRedisplay();break;}
         case 'r': {reset();break;}
 		case 'f': {fullscreen=!fullscreen;if(fullscreen){oWIDTH=WIDTH;oHEIGHT=HEIGHT;glutFullScreen();}else{glutReshapeWindow(oWIDTH,oHEIGHT);}break;}
-		case 'j': {if(julia){julia=false;reset();std::cout << "-Fractal Mode-\n";}else{julia=true;xJul=xPos+mouseX/zoom;
-				   yJul=yPos+(HEIGHT-mouseY)/zoom;reset();std::cout << "--Julia Mode--\nReal:" << xJul << "\nImag:" << yJul << "\n--------------\n";}break;}
+		case 'j': {if(julia&&frame>oFrame+8){julia=false;reset();}else{julia=true;xJul=xPos+mouseX/zoom;
+				   yJul=yPos+(HEIGHT-mouseY)/zoom;}oFrame=frame;glutPostRedisplay();break;}
 	}
 }
 long double r0,i0,real,imag,tempreal,io,ro;
@@ -75,7 +80,7 @@ float escapesmooth(long double real, long double imag, int x, int y){
 		r0=xJul;i0=yJul;
 	}
 	iter=0.0;
-	if(fractal==1&&!julia){if(inCardioidOrBulb(real,imag)){return maxIter;}}
+	//if(fractal==1&&!julia){if(inCardioidOrBulb(real,imag)){return maxIter;}}
 	while(iter<maxIter&&real*real+imag*imag<=16){
 		if(fractal==4){
 			tempreal=real*imag+r0;
@@ -129,8 +134,8 @@ float escapesmooth(long double real, long double imag, int x, int y){
 void display(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	if(render){
-		glBegin(GL_POINTS);
 		for(int y=HEIGHT;y>0;y--){
+		glBegin(GL_POINTS);
 			for(int x=0;x<WIDTH+1;x++){
 				iterations=escapesmooth(x/zoom+xPos,y/zoom+yPos,xJul,yJul);
 					glVertex2i(x,y);
@@ -213,6 +218,9 @@ void onMouseMove(int x, int y) {
 	mouseX = x;
 	mouseY = y;
 }
+void idle(){
+	frame++;
+}
 void specialfunc(int key, int x, int y){
 	switch(key){
 		case GLUT_KEY_UP:{
@@ -236,6 +244,7 @@ int main(int argc, char** argv){
 	gluOrtho2D(0, WIDTH, 0, HEIGHT);
 	glLoadIdentity();
 	glClearColor(0.0,0.0,0.0,1.0);
+	glutSetKeyRepeat(1);
 	std::cout << "Maximum iterations: " << maxIter << "\n";
 
 	glutSpecialFunc(specialfunc);
@@ -245,6 +254,7 @@ int main(int argc, char** argv){
 	glutMouseFunc(mouse);
 	glutMotionFunc(motion);
 	glutKeyboardFunc(key);
+	glutIdleFunc(idle);
 
 	glutMainLoop();
 	return 0;
