@@ -60,9 +60,10 @@ void key(unsigned char key, int x, int y) {
 		case '3': {fractal=3;std::cout << "---Tri-corn---\n";glutPostRedisplay();break;}
 		case '2': {fractal=2;std::cout << "-Burning Ship-\n";glutPostRedisplay();break;}
 		case '1': {fractal=1;std::cout << "Mandelbrot Set\n";glutPostRedisplay();break;}
-		case 'r': {reset();break;}
-		case 'f': {fullscreen = !fullscreen;if(fullscreen){oWIDTH=WIDTH;oHEIGHT=HEIGHT;glutFullScreen();}else{glutReshapeWindow(oWIDTH,oHEIGHT);}break;}
-		case 'j': {if(julia){julia=false;reset();std::cout << "-Fractal Mode-\n";}else{julia=true;xJul=xPos+mouseX/zoom;yJul=yPos+(HEIGHT-mouseY)/zoom;reset();std::cout << "--Julia Mode--\nReal:" << xJul << "\nImag:" << yJul << "\n--------------\n";}break;}
+        case 'r': {reset();break;}
+		case 'f': {fullscreen=!fullscreen;if(fullscreen){oWIDTH=WIDTH;oHEIGHT=HEIGHT;glutFullScreen();}else{glutReshapeWindow(oWIDTH,oHEIGHT);}break;}
+		case 'j': {if(julia){julia=false;reset();std::cout << "-Fractal Mode-\n";}else{julia=true;xJul=xPos+mouseX/zoom;
+				   yJul=yPos+(HEIGHT-mouseY)/zoom;reset();std::cout << "--Julia Mode--\nReal:" << xJul << "\nImag:" << yJul << "\n--------------\n";}break;}
 	}
 }
 long double r0,i0,real,imag,tempreal,io,ro;
@@ -126,9 +127,10 @@ float escapesmooth(long double real, long double imag, int x, int y){
 	return iter;
 }
 void display(){
+	glClear(GL_COLOR_BUFFER_BIT);
 	if(render){
+		glBegin(GL_POINTS);
 		for(int y=HEIGHT;y>0;y--){
-			glBegin(GL_POINTS);
 			for(int x=0;x<WIDTH+1;x++){
 				iterations=escapesmooth(x/zoom+xPos,y/zoom+yPos,xJul,yJul);
 					glVertex2i(x,y);
@@ -165,10 +167,11 @@ void display(){
 					}
 				}
 			}
-		glEnd();
-		glFlush();
 		}
+	glEnd();
+	glFlush();
 	}
+glutSwapBuffers();
 }
 void reshape(int w, int h) {
 	glViewport(0, 0, w, h);
@@ -181,7 +184,8 @@ void reshape(int w, int h) {
 	HEIGHT = h;
 	render=true;
 	glutPostRedisplay();
-}bool isDragging = false;
+}
+bool isDragging = false;
 int lastX,lastY;
 
 void mouse(int button, int state, int x, int y){
@@ -230,7 +234,6 @@ int main(int argc, char** argv){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0, WIDTH, 0, HEIGHT);
-	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glClearColor(0.0,0.0,0.0,1.0);
 	std::cout << "Maximum iterations: " << maxIter << "\n";
