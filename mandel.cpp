@@ -58,7 +58,7 @@ void key(unsigned char key, int x, int y) {
         maxIter2 = maxIter;std::cout << "Maximum iterations: " << maxIter << "\n";render = true;
 		if(maxIter>1000000){maxIter=1000000;}glutPostRedisplay();break;}
 
-		case 'b': {biomorph=!biomorph;glutPostRedisplay();break;}
+		case 'b': {biomorph=!biomorph;biomorphVal=1;glutPostRedisplay();break;}
 		case '[': {if(biomorph){biomorphVal-=0.1;}render=true;glutPostRedisplay();break;}
 		case ']': {if(biomorph){biomorphVal+=0.1;}render=true;glutPostRedisplay();break;}
 		case 'o': {bailout/=1.1;render=true;glutPostRedisplay();break;}
@@ -70,7 +70,6 @@ void key(unsigned char key, int x, int y) {
 		case '2': {fractal=2;std::cout << "-Burning Ship-\n";bailout=16;  glutPostRedisplay();break;}
 		case '1': {fractal=1;std::cout << "Mandelbrot Set\n";bailout=16;  glutPostRedisplay();break;}
         case 'r': {reset();break;}
-		case 'f': {fullscreen=!fullscreen;if(fullscreen){oWIDTH=WIDTH;oHEIGHT=HEIGHT;glutFullScreen();}else{glutReshapeWindow(oWIDTH,oHEIGHT);}break;}
 		case 'j': {if(julia&&frame>oFrame+8){julia=false;}else{julia=true;xJul=xPos+mouseX/zoom;
 				   yJul=yPos+(HEIGHT-mouseY)/zoom;}oFrame=frame;glutPostRedisplay();break;}
 	}
@@ -227,6 +226,7 @@ void idle(){
 }
 void specialfunc(int key, int x, int y){
 	switch(key){
+		case GLUT_KEY_F11: {fullscreen=!fullscreen;if(fullscreen){oWIDTH=WIDTH;oHEIGHT=HEIGHT;glutFullScreen();}else{glutReshapeWindow(oWIDTH,oHEIGHT);}break;}
 		case GLUT_KEY_UP:{
 			yPos+=40/zoom;glutPostRedisplay();break;}
 		case GLUT_KEY_DOWN:{
