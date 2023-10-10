@@ -8,20 +8,35 @@ multithreading for some reason only slows stuff down (using omp.h), so not doing
 
 # Controls:
 Drag to move.
+
 Q/E to zoom in/out.
+
 -/= to change the maximum amount of iterations.
+
 1 for Mandelbrot set.
+
 2 for Burning Ship.
+
 3 for Tricorn/mandelbar
+
 4 for weird line fractal with spider web julia sets
+
 5 for Failed Möbius/Depressed mandelbrot
+
 F goes into fullscreen
+
 R resets.
+
 J for julia set at the point where your cursor is.
+
 SPACE prints position + zoom
+
 B to toggle biomorphs
+
 S to toggle smooth coloring
 
+[&] to in/decrease biomorph value
+o&p to in/decrease bailout
 # planned stuff
 general optimizations, like
 boundry tracing? (any help really appreciated)
