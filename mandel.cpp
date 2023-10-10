@@ -3,7 +3,7 @@
 #include <cmath>
 static bool fullscreen = false;
 float lerp(float a,float b,float t){return a+t*(b-a);}
-float WIDTH =800;
+float WIDTH =800,biomorphVal=4,bailout=16;;
 float oWIDTH,oHEIGHT;
 using namespace std;
 float HEIGHT=600;
@@ -28,11 +28,11 @@ float period=0,iterations=0,iter=0,log_zn,nu,r1,r2,g1,g2,b1,b2,deltaX,deltaY,t;
 void reset(){
 	xPos=-3.2;yPos=-2.0;zoom=150;render=true;glutPostRedisplay();
 }
-//bool inCardioidOrBulb(long double x, long double y) {
-//    long double y2 = y * y;
-//    long double q = (x - 0.25) * (x - 0.25) + y2;
-//    return (q * (q + (x - 0.25)) < y2 / 4.0 || (x + 1.0) * (x + 1.0) + y2 < 0.0625);
-//}
+bool inCardioidOrBulb(long double x, long double y) {
+    long double y2 = y * y;
+    long double q = (x - 0.25) * (x - 0.25) + y2;
+    return (q * (q + (x - 0.25)) < y2 / 4.0 || (x + 1.0) * (x + 1.0) + y2 < 0.0625);
+}
 
 void key(unsigned char key, int x, int y) {
 	if (key == 27) {
@@ -59,15 +59,19 @@ void key(unsigned char key, int x, int y) {
 		if(maxIter>1000000){maxIter=1000000;}glutPostRedisplay();break;}
 
 		case 'b': {biomorph=!biomorph;glutPostRedisplay();break;}
+		case '[': {if(biomorph){biomorphVal-=0.1;}render=true;glutPostRedisplay();break;}
+		case ']': {if(biomorph){biomorphVal+=0.1;}render=true;glutPostRedisplay();break;}
+		case 'o': {bailout/=1.1;render=true;glutPostRedisplay();break;}
+		case 'p': {bailout*=1.1;render=true;glutPostRedisplay();break;}
 		case 's': {smooth  =!smooth;  glutPostRedisplay();break;}
-		case '4': {fractal=4;std::cout << "-New Fractal?-\n";glutPostRedisplay();break;}
-		case '5': {fractal=5;std::cout << "----thing?----\n";glutPostRedisplay();break;}
-		case '3': {fractal=3;std::cout << "---Tri-corn---\n";glutPostRedisplay();break;}
-		case '2': {fractal=2;std::cout << "-Burning Ship-\n";glutPostRedisplay();break;}
-		case '1': {fractal=1;std::cout << "Mandelbrot Set\n";glutPostRedisplay();break;}
+		case '4': {fractal=4;std::cout << "-New Fractal?-\n";bailout=2048;glutPostRedisplay();break;}
+		case '5': {fractal=5;std::cout << "--Depressed?--\n";bailout=16;  glutPostRedisplay();break;}
+		case '3': {fractal=3;std::cout << "---Tri-corn---\n";bailout=16;  glutPostRedisplay();break;}
+		case '2': {fractal=2;std::cout << "-Burning Ship-\n";bailout=16;  glutPostRedisplay();break;}
+		case '1': {fractal=1;std::cout << "Mandelbrot Set\n";bailout=16;  glutPostRedisplay();break;}
         case 'r': {reset();break;}
 		case 'f': {fullscreen=!fullscreen;if(fullscreen){oWIDTH=WIDTH;oHEIGHT=HEIGHT;glutFullScreen();}else{glutReshapeWindow(oWIDTH,oHEIGHT);}break;}
-		case 'j': {if(julia&&frame>oFrame+8){julia=false;reset();}else{julia=true;xJul=xPos+mouseX/zoom;
+		case 'j': {if(julia&&frame>oFrame+8){julia=false;}else{julia=true;xJul=xPos+mouseX/zoom;
 				   yJul=yPos+(HEIGHT-mouseY)/zoom;}oFrame=frame;glutPostRedisplay();break;}
 	}
 }
@@ -80,8 +84,8 @@ float escapesmooth(long double real, long double imag, int x, int y){
 		r0=xJul;i0=yJul;
 	}
 	iter=0.0;
-	//if(fractal==1&&!julia){if(inCardioidOrBulb(real,imag)){return maxIter;}}
-	while(iter<maxIter&&real*real+imag*imag<=16){
+	if(fractal==1&&!julia&&bailout>4&&biomorphVal>1){if(inCardioidOrBulb(real,imag)){return maxIter;}}
+	while(iter<maxIter&&real*real+imag*imag<=bailout){
 		if(fractal==4){
 			tempreal=real*imag+r0;
 			imag=2*real-imag+i0;
@@ -112,7 +116,7 @@ float escapesmooth(long double real, long double imag, int x, int y){
 		}
 		//interesting effect
 		if(biomorph){
-			if(abs(real)>4&&abs(imag)>4){
+			if(abs(real)>biomorphVal&&abs(imag)>biomorphVal){
 				iter=maxIter-abs(real*imag)+0.1;
 				break;
 			}
@@ -235,7 +239,7 @@ void specialfunc(int key, int x, int y){
 }
 int main(int argc, char** argv){
 	glutInit(&argc,argv);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(WIDTH,HEIGHT);
 	glutCreateWindow("mandel badandel");
 
