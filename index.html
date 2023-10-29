@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: 'Ubuntu', sans-serif;
+    margin: 0;
+  }
+
+  .top-bar {
+    background-color: #2f4f4f;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .top-bar a {
+    text-decoration: none;
+    color: white;
+    margin: 5px;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #3a4a5a;
+    min-width: 160px;
+    z-index: 1;
+    right: 0;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h3>The (smooth) Mandelbrot Set</h3>
+  <div>
+    <a href="https://iogamesmaker.github.io">Home</a>
+    <div class="dropdown">
+      <a>Projects</a>
+      <div class="dropdown-content">
+        <a href="https://iogamesmaker.github.io/smoothmandelbrot">The Mandelbrot Set</a>
+        <a href="https://iogamesmaker.github.io/blackholerenderer">Black Hole Renderer</a>
+      </div>
+    </div>
+    <a href="https://iogamesmaker.github.io/info">Info</a>
+  </div>
+</div>
+<h1>the (smooth) Mandelbrot Set</h1>
+<p1>After experimenting with ChatGPT to create fractal generators, I decided to make one myself. I did so with the help of a wikipedia article called "Plotting the Mandelbrot Set". If you're new to coding and looking for a fun, low effort/high reward project to work on I'd definitively give the Mandelbrot set a try. This is my most polished, and longest running project I've been working on, and also the only fun one :).</p1>
+<h2>Controls</h2>
+<p1>Arrow keys/drag the mouse to move</p></p1>
+<p1>Q/E to zoom in/out</p></p1>
+<p1>+/- to in/decrease the maximum amount of iterations</p></p1>
+<p1>A/Z to in/decrease samples</p></p1>
+<p1>B to toggle biomorphs</p></p1>
+<p1>[/] to change the biomorph value</p></p1>
+<p1>O/P to in/decrease the bailout value</p></p1>
+<p1>S to toggle smooth coloring</p></p1>
+<p1>R to "respawn"</p></p1>
+<p1>1/2/3/4/5 to change fractal</p></p1>
+<p1>Tap/hold J to explore julia sets</p></p1>
+<p1>U/I to downscale the image</p></p1>
+<p1>F11 to toggle fullscreen</p></p></p1>
+<p1>Compile with: g++ mandel.cpp -o mandel -lGL -lGLU -lglut -Ofast</p1>
+<h2>Some images</h2>
+</p>
+<img src="https://user-images.githubusercontent.com/130794776/273916355-3a938b3b-b0f3-441e-9257-b60af0aa5bbe.png"> 
+</p>
+<img src="https://user-images.githubusercontent.com/130794776/273916375-91980032-05f3-40e6-b359-6d9432411276.png"> 
+</p>
+<img src="https://user-images.githubusercontent.com/130794776/273916385-bc4f7b51-6f9b-4805-aef9-6810c6a30961.png"> 
+</p>
+<img src="https://user-images.githubusercontent.com/130794776/273916397-88f2a6fb-e9fc-4650-8279-64b084ea33fe.png"> 
+</p>
+<img src="https://user-images.githubusercontent.com/130794776/273916402-08a411b9-04c9-49a3-b297-813710030927.png"> 
+</p>
+<img src="https://user-images.githubusercontent.com/130794776/273917467-4de4b40d-8f75-4262-8971-6aa82b44d333.png"> 
+</body>
+</html>
