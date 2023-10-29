@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: 'Ubuntu', sans-serif;
+    margin: 0;
+  }
+
+  .top-bar {
+    background-color: #2f4f4f;
+    padding: 1px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .top-bar a {
+    text-decoration: none;
+    color: white;
+    margin: 5;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #2f4f4f;
+    min-width: 160px;
+    z-index: 1;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <h3>My stupid site - The Mandelbrot Set</h3>
+  <div>
+    <a href="https://iogamesmaker.github.io">Home</a>
+    <div class="dropdown">
+      <a>Projects</a>
+      <div class="dropdown-content">
+        <a href="https://iogamesmaker.github.io/smoothmandelbrot">The Mandelbrot Set</a>
+        <a href="https://iogamesmaker.github.io/blackholerenderer">Black Hole Renderer</a>
+      </div>
+    </div>
+    <a href="https://iogamesmaker.github.io/info">Info</a>
+  </div>
+</div>
+<p1>Hello word!</p1>
+</body>
+</html>
