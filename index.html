@@ -115,7 +115,8 @@ int main(int argc, char** argv){
   glLoadIdentity();
 
   glutDisplayFunc(display); // Uses the display function to update the screen
-  display(); // Calls the function once to draw the Mandelbrot Set. Replace with glutMainLoop(); to have it draw multiple times.
+
+  glutMainLoop(); // Calls for the display function each frame.
 }
 </code>
 </pre>
@@ -142,16 +143,16 @@ void display(){
       cImag=(y/zoom)+yPos; // |
       zReal=0;
       zImag=0;
-      while(iter&lt;maxIter&&zReal*zReal+zImag*zImag&lt;4){ // Checks if the iter value exceeds the limit, or if the point gets out of bounds.
+      while(iter&lt;maxIter&&zReal*zReal+zImag*zImag&lt;4){ // Checks if the iter value exceeds maxIter, or if the point gets out of bounds.
           zrTemp=((zReal*zReal)-(zImag*zImag))+cReal; // Calculates the real part of Z
           zImag=2*zImag*zReal+cImag; // Calculates the imaginary part of Z
           zReal=zrTemp; // Sets zReal to the calculated value.
           iter++; // Changes the iterations variable.
-      } 
+      }
       if(iter==maxIter){
         glColor3f(0,0,0);}// Makes the point black if it didn't go out of bounds in the set number of maximum iterations
       else{
-        glColor3f(iter/maxIter,iter/maxIter,iter/maxIter); // Makes the point a grey color based on how long the point took to escape.
+        glColor3f(10*iter/maxIter,10*iter/maxIter,10*iter/maxIter); // Makes the point a grey color based on how long the point took to escape.
       }
       glVertex2i(x,y);
     }
