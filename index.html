@@ -153,7 +153,7 @@ void display(){
       if(iter==maxIter){
         glColor3f(0,0,0);}// Makes the point black if it didn't go out of bounds in the set number of maximum iterations
       else{
-        glColor3f(10*iter/maxIter,10*iter/maxIter,10*iter/maxIter); // Makes the point a grey color based on how long the point took to escape.
+        glColor3f(10*iter/maxIter,10*iter/maxIter,10*iter/maxIter); // Makes the point a grey color
       }
       glVertex2i(x,y);
     }
