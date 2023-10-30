@@ -138,14 +138,14 @@ long double cReal,cImag,zReal,zImag,zrTemp; // predefinitions
 void display(){
   glClear(GL_COLOR_BUFFER_BIT);
   glBegin(GL_POINTS);
-  for (int x = 0; x < WIDTH; x++) {
-    for (int y = 0; y < HEIGHT; y++) {
+  for (int x = 0; x &lt; WIDTH; x++) {
+    for (int y = 0; y &lt; HEIGHT; y++) {
       iter=0;
       cReal=(x/zoom)+xPos; // | Maps the current pixel to a grid,
       cImag=(y/zoom)+yPos; // |
       zReal=0;
       zImag=0;
-      while(iter<maxIter&&zReal*zReal+zImag*zImag<4){ // Checks if the iter value exceeds the limit, or if the point gets out of bounds.
+      while(iter&lt;maxIter&&zReal*zReal+zImag*zImag&lt;4){ // Checks if the iter value exceeds the limit, or if the point gets out of bounds.
           zrTemp=((zReal*zReal)-(zImag*zImag))+cReal; // Calculates the real part of Z
           zImag=2*zImag*zReal+cImag; // Calculates the imaginary part of Z
           zReal=zrTemp; // Sets zReal to the calculated value.
