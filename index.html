@@ -109,9 +109,12 @@ int main(int argc, char** argv){
   glutInitWindowSize(WIDTH,HEIGHT); // Sets the window size
   glutCreateWindow("OpenGL Mandelbrot"); // Creates the window and gives it a name
 
-	glMatrixMode(GL_PROJECTION);
-	gluOrtho2D(0, WIDTH, 0, HEIGHT);
-	glLoadIdentity();
+  glViewport(0, 0, WIDTH, HEIGHT); // Changes some werid openGL settings
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0, WIDTH, 0, HEIGHT, -1, 1);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
 
   glutDisplayFunc(display); // Uses the display function to update the screen
 
