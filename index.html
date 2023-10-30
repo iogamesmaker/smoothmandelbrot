@@ -85,32 +85,83 @@ code {
 <p1>Start your program with this basic OpenGL start project code: (I personally use this code for any new project)</p1>
 <pre>
 <code>
-#include <GL/glut.h>
-#include <cmath>
-const int WIDTH=800,HEIGHT=600;
+#include <GL/glut.h> // Includes openGL
+#include <cmath>  // Needed for some math functions later
+const int WIDTH=800,HEIGHT=600; // Define your resolution.
+void display(){ // Display function. This 
+  glClear(GL_COLOR_BUFFER_BIT); // Clears the screen
+  glBegin(GL_POINTS);
+  for (int x = 0; x < WIDTH; x++) {
+    for (int y = 0; y < HEIGHT; y++) {
+      // Drawing logic will be implemented here later.
+      glColor3f(0.5,0.5,0.5); // Temporary gray color
+      glVertex2i(x,y); // Plots the pixel.
+    }
+  }
+  glEnd();  // | Writes the plotted pixels to the display
+  glFlush();// |
+  glutSwapBuffers(); // Switches the pixel buffer
+}
+int main(int argc, char** argv){
+  glutInit(&argc,argv); // Inits OpenGL
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB); // Set to DOUBLE to avoid flickering
+
+  glutInitWindowSize(WIDTH,HEIGHT); // Sets the window size
+  glutCreateWindow("OpenGL Mandelbrot"); // Creates the window and gives it a name
+
+	glMatrixMode(GL_PROJECTION);
+	gluOrtho2D(0, WIDTH, 0, HEIGHT);
+	glLoadIdentity();
+
+  glutDisplayFunc(display); // Uses the display function to update the screen
+
+  glutMainLoop();
+}
+</code>
+</pre>
+<p1>This should output a grey window called "OpenGL Mandelbrot". Let's add some actual Mandelbrot code now.</p1>
+<p1>Initialize some variables after including cmath and before the display function:</p1>
+<pre><code>
+const int maxIter=250; // Higher value means more detail at higher zoom levels.
+long double xPos=-3.2;
+long double yPos=-2.0; // Feel free to adjust these values!
+long double zoom= 150; // Zoom level. Higher is more zoomed-in
+
+long double cReal,cImag,zReal,zImag,zrTemp; predefinitions
+</code></pre>
+<p1>All of these values can be changed to modify the end-product. Now, go to the display function and modify it as follows.</p1>
+<pre>
+<code>
 void display(){
   glClear(GL_COLOR_BUFFER_BIT);
   glBegin(GL_POINTS);
   for (int x = 0; x < WIDTH; x++) {
     for (int y = 0; y < HEIGHT; y++) {
-      // Drawing logic will be implemented here later.
-      glColor3f(0.5,0.5,0.5);
+      iter=0;
+      cReal=(x/zoom)+xPos; // | Maps the current pixel to a grid,
+      cImag=(y/zoom)+yPos; // |
+      zReal=0;
+      zImag=0;
+      while(iter<maxIter&&zReal*zReal+zImag*zImag<4){ // Checks if the iter value exceeds the limit, or if the point gets out of bounds.
+          zrTemp=((zReal*zReal)-(zImag*zImag))+cReal; // Calculates the real part of Z
+          zImag=2*zImag*zReal+cImag; // Calculates the imaginary part of Z
+          zReal=zrTemp; // Sets zReal to the calculated value.
+          iter++; // Changes the iterations variable.
+      } 
+      if(iter==maxIter){
+        glColor3f(0,0,0);}// Makes the point black if it didn't go out of bounds in the set number of maximum iterations
+      else{
+        glColor3f(iter/maxIter,iter/maxIter,iter/maxIter); // Makes the point a grey color based on how long the point took to escape.
+      }
       glVertex2i(x,y);
     }
   }
   glEnd();
   glFlush();
 }
-int main(int argc, char** argv){
-  glutInit(&argc,argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-
-  glutInitWindowSize(WIDTH,HEIGHT);
-  glutCreateWindow
-}
 </code>
 </pre>
-<p1>To be continued, need to go to my next lesson now :P</p1>
+<p1>That should be it! You should have a nice mandelbrot image on your screen! Feel free, no, I encourage you to make your own little modifications, like adding more interesting colors, or perhaps change the fractal a bit!</p1>      
 <h2>Some images</h2>
 </p>
 <img src="https://user-images.githubusercontent.com/130794776/273916355-3a938b3b-b0f3-441e-9257-b60af0aa5bbe.png"width="640" height="360"> 
