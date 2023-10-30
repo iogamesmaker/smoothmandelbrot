@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>Smooth Mandelbrot Set</title>
 <style>
   body {
     background-color: black;
@@ -37,6 +38,13 @@
   .dropdown:hover .dropdown-content {
     display: block;
   }
+code {
+  font-family: Consolas,"courier new";
+  color: crimson;
+  background-color: #1f1f1f;
+  padding: 2px;
+  font-size: 105%;
+}
 </style>
 </head>
 <body>
@@ -70,7 +78,39 @@
 <p1>Tap/hold J to explore julia sets</p></p1>
 <p1>U/I to downscale the image</p></p1>
 <p1>F11 to toggle fullscreen</p></p></p1>
-<p1>Compile with: g++ mandel.cpp -o mandel -lGL -lGLU -lglut -Ofast</p1>
+<p1>Compile with:<code>g++ mandel.cpp -o mandel -lGL -lGLU -lglut -Ofast</code></p1>
+</p>
+<h2>How to plot a Mandelbrot set!</h2>
+<p1>This small tutorial thing was only tested on Linux. Small modifications might be neccesary for Windows/macOS.</p>On Linux, first install some dependencies with (for Debian based systems with Aptitude): <code>sudo apt install gcc g++ freeglut3-dev</code> This command installs openGL glut, a long obsolete package but I like it for its decent simplicity.</p1>
+<p1>Start your program with this basic OpenGL start project code: (I personally use this code for any new project)</p1>
+<pre>
+<code>
+#include <GL/glut.h>
+#include <cmath>
+const int WIDTH=800,HEIGHT=600;
+void display(){
+  glClear(GL_COLOR_BUFFER_BIT);
+  glBegin(GL_POINTS);
+  for (int x = 0; x < WIDTH; x++) {
+    for (int y = 0; y < HEIGHT; y++) {
+      // Drawing logic will be implemented here later.
+      glColor3f(0.5,0.5,0.5);
+      glVertex2i(x,y);
+    }
+  }
+  glEnd();
+  glFlush();
+}
+int main(int argc, char** argv){
+  glutInit(&argc,argv);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+
+  glutInitWindowSize(WIDTH,HEIGHT);
+  glutCreateWindow
+}
+</code>
+</pre>
+<p1>To be continued, need to go to my next lesson now :P</p1>
 <h2>Some images</h2>
 </p>
 <img src="https://user-images.githubusercontent.com/130794776/273916355-3a938b3b-b0f3-441e-9257-b60af0aa5bbe.png"width="640" height="360"> 
