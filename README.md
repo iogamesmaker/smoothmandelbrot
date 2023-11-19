@@ -1,3 +1,4 @@
+stuff here: ![personal webpage](https://hetboeitmeniet.nl/smoothmandelbrot/)
 # smooth mandelbrot
 The Mandelbrot set using the Escape Time algorithm, and smooth coloring. 1k iterations is ~1.3 seconds on a 800x600 window on a chromebook.
 I stole the smooth coloring algorithm from https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set.
