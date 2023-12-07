@@ -80,6 +80,8 @@ code {
 <p1>F11 to toggle fullscreen</p></p></p1>
 <p1>Compile with:<code>g++ mandel.cpp -o mandel -lGL -lGLU -lglut -Ofast</code></p1>
 </p>
+<h2>How it works</h2>
+<p>So, the general idea of plotting the mandelbrot set is to run the formula "z=z^2+c" for a limited amount of iterations, for every pixel. The variables "z" and "c" are complex numbers. Z is initialized to be (0,0i), and c is a certain value, like a coordinate grid. To do this in code without using complex numbers, but simple numbers, is quite tricky. People have found a way to do it, I put it in the tutorial below. I am not quite sure how it works, but it sure does :).</p>
 <h2>How to plot the Mandelbrot set using C++/openGL glut.h</h2>
 <img src="https://github.com/iogamesmaker/smoothmandelbrot/blob/main/screenshots/output.png?raw=true"width="400" height="300"><p1>What you get if you follow the tutorial/copy the code</p></p1>
 <p1>This small tutorial thing was only tested on Linux. Small modifications might be neccesary for Windows/macOS.</p>On Linux, first install some dependencies with (for Debian based systems with Aptitude): <code>sudo apt install gcc g++ freeglut3-dev</code> This command installs openGL glut, a long obsolete package but I like it for its decent simplicity.</p1>
