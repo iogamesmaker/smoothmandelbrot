@@ -13,7 +13,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.568);
+    background-color: rgb(0, 0, 0);
 }
 
 .top-bar a {
@@ -47,7 +47,7 @@ body {
 .layout{
     padding-left: 10%;
     padding-right: 10%;
-    background-color: rgba(0, 0, 0, 0.568);
+    background-color: rgb(0, 0, 0);
 }
 
 ::-webkit-scrollbar {
@@ -64,16 +64,15 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #adadad;
+    background: #060606;
 }
 @media only screen and (max-width: 600px) {
-    /* Add your mobile styles here */
     .top-bar {
         flex-direction: column;
         align-items: flex-start;
     }
     .title {
-        padding-left: 10px; /* Adjust as needed */
+        padding-left: 10px;
     }
     .dropdown-content {
         position: static;
